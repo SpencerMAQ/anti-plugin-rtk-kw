@@ -20,6 +20,8 @@ rtkKeywordField = 'Keyword'
 rtkOnyomiField = 'Onyomi'
 rtkKunyomiField = 'First kunyomi'
 
+# FIXME: The entire addon doesn't work anymore
+
 # getKeywords
 ##########################################################################
 cache = {}
@@ -27,7 +29,7 @@ cache = {}
 
 def generateCache():
     global cache                            # what is this for?
-    model = mw.col.models.byName(rtkModel)
+    model = mw.col.models.byName(rtkModel)  # get model (i.e. Japanese_OLD_KDamage-15AUG2015)
     mf = "mid:" + str(model['id'])
     ids = mw.col.findNotes(mf)
     for id in ids:
