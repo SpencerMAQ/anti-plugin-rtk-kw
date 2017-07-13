@@ -12,17 +12,21 @@ from anki.hooks import addHook
 from aqt import mw
 from aqt.utils import showInfo
 
-srcFields = ['Reading']
-dstFields = ['Keyword']
-rtkModel = 'Japanese Heisigs RTK all-in-one'
+srcFields = ['Expression']
+dstFields = ['Kanji-Info']
+rtkModel = 'Japanese_OLD_KDamage-15AUG2015'
 rtkKanjiField = 'Kanji'
-rtkKeywordField = 'Heisig Keyword'
+rtkKeywordField = 'Keyword'
+rtkOnyomiField = 'Onyomi'
+rtkKunyomiField = 'First kunyomi'
 
 # getKeywords
 ##########################################################################
 cache = {}
+
+
 def generateCache():
-    global cache
+    global cache                            # what is this for?
     model = mw.col.models.byName(rtkModel)
     mf = "mid:" + str(model['id'])
     ids = mw.col.findNotes(mf)
@@ -30,11 +34,16 @@ def generateCache():
         note = mw.col.getNote(id)
         kanji = note[rtkKanjiField]
         keyword = note[rtkKeywordField]
-        message = "<a href='http://kanji.koohii.com/study/kanji/"+kanji+"'>" + kanji + " - " + keyword + "</a><br>"
+        onyomi = note[rtkOnyomiField]
+        kunyomi = note[rtkKunyomiField]
+
         if kanji in cache:
-            cache[kanji] += message
+            cache[kanji] += kanji + " - " + keyword + " - " + onyomi + " - " + kunyomi + \
+                            ' <span style="font-weight:600;font-size:150%;color:#f5ad58">|</span> '
         else:
-            cache[kanji]  = message
+            cache[kanji] = kanji + " - " + keyword + " - " + onyomi + " - " + kunyomi + \
+                           ' <span style="font-weight:600;font-size:150%;color:#f5ad58">|</span> '
+
 
 def getKeywordsFast(expression):
     kw = ""
@@ -42,6 +51,7 @@ def getKeywordsFast(expression):
         if e in cache:
             kw += cache[e]
     return kw
+
 
 def getKeywords(expression):
     model = mw.col.models.byName(rtkModel)
@@ -55,6 +65,7 @@ def getKeywords(expression):
             note = mw.col.getNote(id)
             kw = kw + e + " - " + note[rtkKeywordField] + "<br>"
     return kw
+
 
 # Focus lost hook
 ##########################################################################
@@ -89,6 +100,7 @@ def onFocusLost(flag, n, fidx):
     except Exception, e:
         raise
     return True
+
 
 # Bulk keywords
 ##########################################################################
@@ -129,6 +141,7 @@ def regenerateKeywords(nids):
     mw.progress.finish()
     mw.reset()
 
+
 # Menu
 ##########################################################################
 
@@ -140,8 +153,10 @@ def setupMenu(browser):
     if cache == {}:
         generateCache()
 
+
 def onRegenerate(browser):
     regenerateKeywords(browser.selectedNotes())
+
 
 # Init
 ##########################################################################
