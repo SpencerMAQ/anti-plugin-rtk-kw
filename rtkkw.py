@@ -5,6 +5,10 @@
 #
 # Automatic RTK keyword generation.
 #
+# Some parts of the code modified are by SpencerMAQ (Michael Spencer Quinto) <spencer.michael.q@gmail.com>
+
+# NOTE: (TO SELF) I just cloned this because I thought the add-on stopped working
+# It worked though when I changed the position of the KanjiInfo Field to "4", weird
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -19,8 +23,6 @@ rtkKanjiField = 'Kanji'
 rtkKeywordField = 'Keyword'
 rtkOnyomiField = 'Onyomi'
 rtkKunyomiField = 'First kunyomi'
-
-# FIXME: The entire addon doesn't work anymore
 
 # getKeywords
 ##########################################################################
