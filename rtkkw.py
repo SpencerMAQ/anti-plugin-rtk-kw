@@ -126,6 +126,26 @@ from aqt/browser.py
 633..    def refreshCurrentCard(self, note):
 634..        self.model.refreshNote(note)
 635..        self._renderPreview(False)
+
+############
+
+33..    class DataModel(QAbstractTableModel):
+34..
+35..        def __init__(self, browser):
+36..            QAbstractTableModel.__init__(self)
+37..            self.browser = browser
+38..            self.col = browser.col
+..
+..
+51..        def refreshNote(self, note):
+51..            refresh = False
+51..            for c in note.cards():
+51..                if c.id in self.cardObjs:
+51..                    del self.cardObjs[c.id]
+51..                    refresh = True
+51..            if refresh:
+51..                self.layoutChanged.emit()
+
 '''
 def onFocusLost(flag, n, fidx):
     src = None
