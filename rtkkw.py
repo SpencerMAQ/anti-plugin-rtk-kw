@@ -30,10 +30,42 @@ cache = {}
 
 
 def generateCache():
-    global cache                            # what is this for?
+    global cache
     model = mw.col.models.byName(rtkModel)  # get model (i.e. Japanese_OLD_KDamage-15AUG2015)
-    mf = "mid:" + str(model['id'])
+    mf = "mid:" + str(model['id'])          # gives something like modile ID mid: 3210392132187321837
     ids = mw.col.findNotes(mf)
+
+    # findNotes defined as a function @ anki/collection.py line 559
+    # this is the code for findNotes
+    '''
+    52..    class _Collection:
+    ..
+    559..       def findNotes(self, query):
+    560..       return anki.find.Finder(self).findNotes(query)
+    '''
+    # the query sent is: mid: 321312321312321
+    # as for Finder(self), self refers to the _Colleciton instance
+
+    # anki/find.py
+    # code for anki.find.Finder
+    '''
+    16.. class Finder:
+    17..
+    18.. def __init__(self, col):
+    19..     self.col = col
+    ..
+    36..     def findCards(self, query, order=False):
+    '''
+
+
+
+    # origin of mw.col (from aqt/main.py)
+    '''
+    258..    def loadCollection(self):
+    259..    cpath = self.pm.collectionPath()
+    260..    try:
+    261..        self.col = Collection(cpath, log=True)
+    '''
     for id in ids:
         note = mw.col.getNote(id)
         kanji = note[rtkKanjiField]
